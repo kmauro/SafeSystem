@@ -5,7 +5,7 @@
 >
 >Este sistema está desarrollado exclusivamente para uso interno de Safe Seguridad.
 
-Sistema interno desarrollado para la gestión comercial, técnica y operativa de Safe Seguridad.
+Sistema interno desarrollado para la gestión comercial, técnica y operativa de <a href="https://www.instagram.com/safeseguridad.ar/?hl=es">Safe Seguridad. </a>
 
 El objetivo principal del proyecto es centralizar la información de clientes, instalaciones y dispositivos de seguridad en una única plataforma, permitiendo optimizar la gestión diaria de la empresa, mejorar la precisión de los presupuestos y reducir errores operativos.
 
