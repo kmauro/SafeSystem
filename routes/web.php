@@ -1,23 +1,37 @@
 <?php
 
+use App\Domains\Users\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Home', [
-        'title' => 'Welcome to Laravel with Inertia.js',
-    ]);
+Route::middleware('guest')->controller(UserController::class)->group(function () {
+    Route::get('/login', 'showLogin')->name('login');
+    Route::post('/login', 'login')->name('login.store');
+
+    Route::get('/signup', 'showSignup')->name('signup');
+    Route::post('/signup', 'signup')->name('signup.store');
 });
 
+Route::post('/logout', [UserController::class, 'logout'])
+    ->middleware('auth')
+    ->name('logout');
 
-Route::get('/crm/dashboard', function () {
-    return Inertia::render('CRM/Dashboard', [
-        'title' => 'Dashboard CRM',
-    ]);
-});
+Route::middleware('auth')->group(function () {
+    Route::get('/', function () {
+        return Inertia::render('Home', [
+            'title' => 'Inicio',
+        ]);
+    })->name('home');
 
-Route::get('/crud/dashboard', function (){
-    return Inertia::render('CRUD/Dashboard', [
-        'title' => 'Dashboard CRUD',
-    ]);
+    Route::get('/crm/dashboard', function () {
+        return Inertia::render('CRM/Dashboard', [
+            'title' => 'Dashboard CRM',
+        ]);
+    })->name('crm.dashboard');
+
+    Route::get('/crud/dashboard', function () {
+        return Inertia::render('CRUD/Dashboard', [
+            'title' => 'Dashboard CRUD',
+        ]);
+    })->name('crud.dashboard');
 });

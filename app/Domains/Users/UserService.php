@@ -2,22 +2,25 @@
 
 namespace App\Domains\Users;
 
-use App\Domains\Users\User;
-use App\Domains\Users\UserRepository;
-
+use Illuminate\Support\Facades\Auth;
 
 class UserService
 {
-    protected UserRepository $userRepository;
+    public function __construct(protected UserRepository $userRepository) {}
 
-    public function __construct(UserRepository $userRepository)
-    {
-        $this->userRepository = $userRepository;
-    }
-
+    /**
+     * @param  array{name: string, email: string, password: string}  $data
+     */
     public function register(array $data): User
     {
-        // You can add additional business logic here, such as sending a welcome email
         return $this->userRepository->create($data);
+    }
+
+    public function authenticate(string $email, string $password, bool $remember = false): bool
+    {
+        return Auth::attempt([
+            'email' => $email,
+            'password' => $password,
+        ], $remember);
     }
 }

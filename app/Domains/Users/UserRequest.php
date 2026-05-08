@@ -2,8 +2,9 @@
 
 namespace App\Domains\Users;
 
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 
 class UserRequest extends FormRequest
 {
@@ -12,18 +13,31 @@ class UserRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, ValidationRule|array<mixed>|string>
+     * @return array<string, array<int, mixed>>
      */
     public function rules(): array
     {
         return [
-            //
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class, 'email')],
+            'password' => ['required', 'string', 'confirmed', Password::defaults()],
         ];
+    }
+
+    /**
+     * @return array{name: string, email: string, password: string}
+     */
+    public function validatedUserData(): array
+    {
+        /** @var array{name: string, email: string, password: string} $validated */
+        $validated = $this->validated();
+
+        return $validated;
     }
 }

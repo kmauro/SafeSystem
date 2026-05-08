@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Domains\Users;
-use App\Domains\Users\User;
-
 
 class UserRepository
 {
