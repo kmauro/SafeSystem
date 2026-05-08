@@ -10,19 +10,14 @@ Route::get('/', function () {
 });
 
 
-Route::get('/users', function () {
-    return Inertia::render('Users', [
-        'title' => 'User List',
-        'users' => [
-            ['id' => 1, 'name' => 'Alice'],
-            ['id' => 2, 'name' => 'Bob'],
-            ['id' => 3, 'name' => 'Charlie'],
-        ],
+Route::get('/crm/dashboard', function () {
+    return Inertia::render('CRM/Dashboard', [
+        'title' => 'Dashboard CRM',
     ]);
 });
 
-Route::get('/products', function (){
-    return Inertia::render('Products', [
-        'title' => 'Product List',
+Route::get('/crud/dashboard', function (){
+    return Inertia::render('CRUD/Dashboard', [
+        'title' => 'Dashboard CRUD',
     ]);
 });
