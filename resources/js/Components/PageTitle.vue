@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { Menu, ChevronRight, ChevronRightSquare } from 'lucide-vue-next'
+import { ChevronRightSquare } from 'lucide-vue-next'
 import ThemeToggle from './ThemeToggle.vue';
 
 const isRotated = ref(false)
