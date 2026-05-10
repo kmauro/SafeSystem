@@ -19,6 +19,46 @@ class UserController extends Controller
         ]);
     }
 
+    public function showProfile(): InertiaResponse
+    {
+        return Inertia::render('Profile', [
+            'title' => 'Mi Perfil',
+            'user' => Auth::user(),
+        ]);
+    }
+
+    public function updateProfile(Request $request, UserService $userService): RedirectResponse
+    {
+        $user = $userService->updateProfile(Auth::id(), $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255'],
+        ]));
+        if ($user) {
+            Auth::setUser($user);
+            return to_route('profile')->with('success', 'Perfil actualizado correctamente.');
+        }else{
+            return back()->with(['error' => 'Error al actualizar el perfil.']);
+        }
+
+    }
+
+    public function updatePassword(Request $request, UserService $userService): RedirectResponse
+    {
+        $data = $request->validate([
+            'current_password' => ['required', 'string'],
+            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
+        ]);
+
+        if (! $userService->updatePassword(Auth::id(), $data['current_password'], $data['new_password'])) {
+            throw ValidationException::withMessages([
+                'current_password' => 'La contraseña actual es incorrecta.',
+            ]);
+        }
+
+        return to_route('profile')->with('success', 'Contraseña actualizada correctamente.');
+    }
+
+
     public function login(Request $request, UserService $userService): RedirectResponse
     {
         $credentials = $request->validate([

@@ -8,6 +8,7 @@ import {
   Plus,
   Settings,
   User,
+  ShieldCheck,
 } from 'lucide-vue-next'
 import { Link, usePage } from '@inertiajs/vue3'
 
@@ -66,15 +67,14 @@ const userInitials = computed(() => {
 
 <template>
   <aside class="min-h-full w-80 shrink-0 flex-col gap-0 border-r border-sidebar-border bg-sidebar text-sidebar-foreground lg:flex">
-    <div class="flex items-center gap-3 border-b border-sidebar-border p-6 pb-4">
-      <div class="grid h-12 w-12 place-items-center rounded-lg bg-primary text-lg font-bold text-primary-foreground">
-        S
-      </div>
-
-      <Link href="/" view-transition replace class="text-lg font-semibold">
-        SafeSystem
-      </Link>
-    </div>
+    <Link href="/" view-transition replace class="flex items-center gap-3 border-b border-sidebar-border p-6 pb-4">
+        <span class="grid size-11 place-items-center rounded-lg bg-primary text-primary-foreground">
+            <ShieldCheck class="size-5" />
+        </span>
+        <span  class="text-lg font-semibold">
+            SafeSystem
+        </span>
+    </Link>
 
     <div class="flex-1 overflow-y-auto p-6">
       <div class="space-y-4">
@@ -126,8 +126,10 @@ const userInitials = computed(() => {
 
         <DropdownMenuContent class="w-56">
           <DropdownMenuItem class="cursor-pointer">
-            <User class="mr-2 h-4 w-4" />
-            <span>Informacion</span>
+            <Link href="/profile" view-transition replace class="flex w-full items-center rounded-lg text-sm text-sidebar-foreground">
+              <User class="mr-2 h-4 w-4" />
+              <span>Informacion</span>
+            </Link>
           </DropdownMenuItem>
 
           <DropdownMenuItem class="cursor-pointer">

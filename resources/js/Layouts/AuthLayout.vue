@@ -13,27 +13,18 @@ defineProps({
 </script>
 
 <template>
-  <div class="min-h-screen bg-background text-foreground">
-    <div class="mx-auto grid min-h-screen w-full max-w-6xl grid-cols-1 lg:grid-cols-[1fr_420px]">
-      <section class="hidden flex-col justify-between border-r border-border px-10 py-8 lg:flex">
-        <Link href="/login" class="flex items-center gap-3 text-lg font-semibold">
-          <span class="grid size-11 place-items-center rounded-lg bg-primary text-primary-foreground">
-            <ShieldCheck class="size-5" />
-          </span>
-          SafeSystem
-        </Link>
-        <ThemeToggle />
-
-        <div class="max-w-xl space-y-4">
-          <p class="text-sm font-medium uppercase text-muted-foreground">Acceso seguro</p>
-          <h1 class="text-4xl font-semibold leading-tight">Gestiona tu sistema desde un entorno protegido.</h1>
-          <p class="text-base text-muted-foreground">
-            Ingresa con tu cuenta o crea una nueva para continuar.
-          </p>
+    <div class="mx-auto min-h-screen w-full grid-cols-1 lg:grid-cols-[1fr_420px]">
+        <div class="hidden items-center justify-between gap-6 border-b border-border bg-card p-6 lg:flex">
+            <Link href="/login" class="flex items-center gap-3 text-lg font-semibold">
+                <span class="grid size-11 place-items-center rounded-lg bg-primary text-primary-foreground">
+                    <ShieldCheck class="size-5" />
+                </span>
+                SafeSystem
+            </Link>
+            <ThemeToggle />
         </div>
 
-        <div class="text-sm text-muted-foreground">SafeSystem</div>
-      </section>
+
 
       <main class="flex min-h-screen items-center justify-center px-6 py-10">
         <div class="w-full max-w-sm">
@@ -64,5 +55,5 @@ defineProps({
         </div>
       </main>
     </div>
-  </div>
+
 </template>

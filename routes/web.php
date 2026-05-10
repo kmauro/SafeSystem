@@ -10,7 +10,15 @@ Route::middleware('guest')->controller(UserController::class)->group(function ()
 
     Route::get('/signup', 'showSignup')->name('signup');
     Route::post('/signup', 'signup')->name('signup.store');
+
 });
+
+Route::middleware('auth')->controller(UserController::class)->group(function () {
+    Route::get('/profile', 'showProfile')->name('profile');
+    Route::post('/profile', 'updateProfile')->name('profile.update');
+    Route::post('/profile/updatePassword', 'updatePassword')->name('profile.updatePassword');
+});
+
 
 Route::post('/logout', [UserController::class, 'logout'])
     ->middleware('auth')

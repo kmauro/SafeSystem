@@ -23,4 +23,22 @@ class UserService
             'password' => $password,
         ], $remember);
     }
+
+    public function updateProfile(int $userId, array $data): User
+    {
+        return $this->userRepository->update($userId, $data);
+    }
+
+    public function updatePassword(int $userId, string $currentPassword, string $newPassword): bool
+    {
+        $user = $this->userRepository->find($userId);
+
+        if (! Auth::validate(['email' => $user->email, 'password' => $currentPassword])) {
+            return false;
+        }
+
+        $this->userRepository->update($userId, ['password' => bcrypt($newPassword)]);
+
+        return true;
+    }
 }

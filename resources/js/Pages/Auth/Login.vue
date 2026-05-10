@@ -49,12 +49,7 @@ function submit() {
       </div>
 
       <div class="space-y-2">
-        <div class="flex items-center justify-between gap-3">
-          <Label for="password">Password</Label>
-          <Link href="/signup" class="text-sm font-medium text-primary underline-offset-4 hover:underline">
-            Sign Up
-          </Link>
-        </div>
+        <Label for="password">Password</Label>
         <Input
           id="password"
           v-model="form.password"
