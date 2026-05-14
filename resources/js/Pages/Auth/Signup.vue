@@ -12,7 +12,10 @@ defineProps({
 
 const form = useForm({
   name: '',
+  surname: '',
   email: '',
+  username: '',
+  phone: '',
   password: '',
   password_confirmation: '',
 }).dontRemember('password', 'password_confirmation')
@@ -43,9 +46,54 @@ function submit() {
           autocomplete="name"
           autofocus
           :aria-invalid="Boolean(form.errors.name)"
-          placeholder="Tu nombre"
+          placeholder="Nombre"
         />
         <p v-if="form.errors.name" class="text-sm text-destructive">{{ form.errors.name }}</p>
+      </div>
+
+      <div class="space-y-2">
+        <Label for="surname">Apellido</Label>
+        <Input
+          id="surname"
+          v-model="form.surname"
+          type="text"
+          name="surname"
+          autocomplete="name"
+          autofocus
+          :aria-invalid="Boolean(form.errors.surname)"
+          placeholder="Apellido"
+        />
+        <p v-if="form.errors.surname" class="text-sm text-destructive">{{ form.errors.surname }}</p>
+      </div>
+
+      <div class="space-y-2">
+        <Label for="username">Nombre de usuario</Label>
+        <Input
+          id="username"
+          v-model="form.username"
+          type="text"
+          name="username"
+          autocomplete="name"
+          autofocus
+          :aria-invalid="Boolean(form.errors.username)"
+          placeholder="Nombre de usuario"
+        />
+        <p v-if="form.errors.username" class="text-sm text-destructive">{{ form.errors.username }}</p>
+      </div>
+
+      <div class="space-y-2">
+        <Label for="phone">Telefono</Label>
+        <Input
+          id="phone"
+          v-model="form.phone"
+          type="text"
+          name="phone"
+          autocomplete="name"
+          autofocus
+          :aria-invalid="Boolean(form.errors.phone)"
+          placeholder="Telefono (opcional)"
+        />
+        <p v-if="form.errors.phone" class="text-sm text-destructive">{{ form.errors.phone }}</p>
       </div>
 
       <div class="space-y-2">
@@ -63,7 +111,7 @@ function submit() {
       </div>
 
       <div class="space-y-2">
-        <Label for="password">Password</Label>
+        <Label for="password">Contraseña</Label>
         <Input
           id="password"
           v-model="form.password"
@@ -77,14 +125,14 @@ function submit() {
       </div>
 
       <div class="space-y-2">
-        <Label for="password_confirmation">Confirmar password</Label>
+        <Label for="password_confirmation">Confirmar Contraseña</Label>
         <Input
           id="password_confirmation"
           v-model="form.password_confirmation"
           type="password"
           name="password_confirmation"
           autocomplete="new-password"
-          placeholder="Repite tu password"
+          placeholder="Repite tu contraseña"
         />
       </div>
 

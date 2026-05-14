@@ -9,19 +9,34 @@ class UserService
     public function __construct(protected UserRepository $userRepository) {}
 
     /**
-     * @param  array{name: string, email: string, password: string}  $data
+     * @param  array{name: string, email: string, password: string, surname: string, username: string, phone: string}  $data
      */
     public function register(array $data): User
     {
         return $this->userRepository->create($data);
     }
 
-    public function authenticate(string $email, string $password, bool $remember = false): bool
+    public function authenticate(string $username, string $password, bool $remember = false): bool
     {
         return Auth::attempt([
-            'email' => $email,
+            'username' => $username,
             'password' => $password,
         ], $remember);
+    }
+
+    public function getAllUsers(): array
+    {
+        return $this->userRepository->all();
+    }
+
+    public function getAllRoles(): array
+    {
+        return $this->userRepository->getAllRoles();
+    }
+
+    public function getUserById(int $id): ?User
+    {
+        return $this->userRepository->find($id);
     }
 
     public function updateProfile(int $userId, array $data): User
@@ -33,7 +48,7 @@ class UserService
     {
         $user = $this->userRepository->find($userId);
 
-        if (! Auth::validate(['email' => $user->email, 'password' => $currentPassword])) {
+        if (! Auth::validate(['username' => $user->username, 'password' => $currentPassword])) {
             return false;
         }
 

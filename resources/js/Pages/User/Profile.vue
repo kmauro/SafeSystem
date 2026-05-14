@@ -7,6 +7,7 @@ import { computed, ref } from 'vue';
 import { Edit, CircleXIcon } from 'lucide-vue-next';
 import { useForm } from '@inertiajs/vue3';
 import { usePage } from '@inertiajs/vue3';
+import { NativeSelect, NativeSelectOption } from '@/Components/ui/native-select';
 
 defineOptions({
     layout: AppLayout,
@@ -14,6 +15,8 @@ defineOptions({
 
 const props = defineProps({
     user: Object,
+    roles: Array,
+    isCurrentUser: Boolean,
 })
 
 const isEditing = ref(false);
@@ -26,8 +29,13 @@ const successMessage = computed(() => page.props.flash.success);
 const errorMessage = computed(() => page.props.flash.error);
 
 const profileForm = useForm({
+    id : props.user.id,
     name : props.user.name,
     email : props.user.email,
+    surname : props.user.surname,
+    username : props.user.username,
+    phone : props.user.phone,
+    role_id : props.user.role_id,
 })
 
 const passForm = useForm({
@@ -99,12 +107,39 @@ function onError() {
 
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-semibold">Información del Perfil</h2>
-            <Button variant="outline" @click="isEditing = !isEditing" class="ml-auto">
+            <Button variant="outline" @click="isEditing = !isEditing" class="ml-auto"
+            :class="{
+                'bg-primary text-white hover:bg-destructive/90' : isEditing,
+
+            }">
                 <Edit v-if="!isEditing" class="size-4" />
                 <CircleXIcon v-else class="size-4" />
             </Button>
         </div>
         <form @submit.prevent="updateProfile" class="mt-4 space-y-4">
+            <Label for="username">Nombre de Usuario:</Label>
+            <Input
+            type="text"
+            id="username"
+            v-model="profileForm.username"
+            disabled
+            :aria-invalid="Boolean(profileForm.errors.username)"
+            />
+            <p v-if="profileForm.errors.username" class="text-sm text-destructive">
+                {{ profileForm.errors.username }}
+            </p>
+
+            <Label for="role">Rol:</Label>
+            <NativeSelect id="role" v-model="profileForm.role_id" :disabled="!isEditing" :aria-invalid="Boolean(profileForm.errors.role_id)">
+                <NativeSelectOption v-for="role in roles" :key="role.id" :value="role.id">
+                    {{ role.role_name }}
+                </NativeSelectOption>
+
+            </NativeSelect>
+            <p v-if="profileForm.errors.role_id" class="text-sm text-destructive">
+                {{ profileForm.errors.role_id }}
+            </p>
+
             <Label for="name">Nombre:</Label>
             <Input
             type="text"
@@ -116,6 +151,31 @@ function onError() {
             <p v-if="profileForm.errors.name" class="text-sm text-destructive">
                 {{ profileForm.errors.name }}
             </p>
+
+            <Label for="surname">Apellido:</Label>
+            <Input
+            type="text"
+            id="surname"
+            v-model="profileForm.surname"
+            :disabled = "!isEditing"
+            :aria-invalid="Boolean(profileForm.errors.surname)"
+            />
+            <p v-if="profileForm.errors.surname" class="text-sm text-destructive">
+                {{ profileForm.errors.surname }}
+            </p>
+
+            <Label for="phone">Telefono:</Label>
+            <Input
+            type="text"
+            id="phone"
+            v-model="profileForm.phone"
+            :disabled = "!isEditing"
+            :aria-invalid="Boolean(profileForm.errors.phone)"
+            />
+            <p v-if="profileForm.errors.phone" class="text-sm text-destructive">
+                {{ profileForm.errors.phone }}
+            </p>
+
             <Label for="email">Correo Electrónico:</Label>
             <Input
             type="email"
@@ -132,7 +192,7 @@ function onError() {
         </form>
     </section>
 
-    <section class="mt-6 border p-4 rounded-lg shadow-md bg-background">
+    <section v-if="isCurrentUser" class="mt-6 border p-4 rounded-lg shadow-md bg-background">
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-semibold mb-4">Cambiar Contraseña</h2>
             <Button variant="outline" @click="changingPass = !changingPass" class="ml-auto">

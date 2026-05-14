@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
+
 use Inertia\Response as InertiaResponse;
 
 class UserController extends Controller
@@ -19,23 +20,52 @@ class UserController extends Controller
         ]);
     }
 
-    public function showProfile(): InertiaResponse
+    public function showProfile(UserService $userService): InertiaResponse
     {
-        return Inertia::render('Profile', [
+        return Inertia::render('User/Profile', [
             'title' => 'Mi Perfil',
-            'user' => Auth::user(),
+            'user' => Auth::user()->load('role'),
+            'isCurrentUser' => true,
+            'roles' => $userService->getAllRoles(),
+        ]);
+    }
+
+    public function showUsers(UserService $userService): InertiaResponse
+    {
+        return Inertia::render('User/Index', [
+            'title' => 'Usuarios',
+            'users' => $userService->getAllUsers(),
+        ]);
+    }
+
+    public function showUser(int $id, UserService $userService): InertiaResponse
+    {
+        $user = $userService->getUserById($id);
+
+        if (! $user) {
+            abort(404);
+        }
+
+        return Inertia::render('User/Profile', [
+            'title' => 'Perfil de ' . $user->name . ' ' . $user->surname,
+            'user' => $user->load('role'),
+            'isCurrentUser' => Auth::id() === $user->id,
+            'roles' => $userService->getAllRoles(),
         ]);
     }
 
     public function updateProfile(Request $request, UserService $userService): RedirectResponse
     {
-        $user = $userService->updateProfile(Auth::id(), $request->validate([
+        $user = $userService->updateProfile($request->id, $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
+            'surname' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255'],
+            'phone' => ['required', 'string', 'max:20'],
+            'role_id' => ['required', 'integer', 'exists:roles,id'],
         ]));
         if ($user) {
-            Auth::setUser($user);
-            return to_route('profile')->with('success', 'Perfil actualizado correctamente.');
+            return back()->with('success', 'Perfil actualizado correctamente.');
         }else{
             return back()->with(['error' => 'Error al actualizar el perfil.']);
         }
@@ -62,14 +92,14 @@ class UserController extends Controller
     public function login(Request $request, UserService $userService): RedirectResponse
     {
         $credentials = $request->validate([
-            'email' => ['required', 'email'],
+            'username' => ['required', 'string'],
             'password' => ['required', 'string'],
             'remember' => ['nullable', 'boolean'],
         ]);
 
-        if (! $userService->authenticate($credentials['email'], $credentials['password'], $request->boolean('remember'))) {
+        if (! $userService->authenticate($credentials['username'], $credentials['password'], $request->boolean('remember'))) {
             throw ValidationException::withMessages([
-                'email' => 'Las credenciales ingresadas no coinciden con nuestros registros.',
+                'username' => 'Las credenciales ingresadas no coinciden con nuestros registros.',
             ]);
         }
 

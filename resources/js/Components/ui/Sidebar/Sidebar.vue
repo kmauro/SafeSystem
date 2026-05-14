@@ -9,6 +9,7 @@ import {
   Settings,
   User,
   ShieldCheck,
+  ListIcon,
 } from 'lucide-vue-next'
 import { Link, usePage } from '@inertiajs/vue3'
 
@@ -54,14 +55,9 @@ const menus = [
   },
 ]
 
-const user = computed(() => page.props.auth?.user ?? { name: 'Usuario', email: '' })
+const user = computed(() => page.props.auth?.user ?? { name: 'Usuario', email: '' , surname: 'Hola', username: '', phone: '' })
 const userInitials = computed(() => {
-  return user.value.name
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((part) => part.charAt(0).toUpperCase())
-    .join('') || 'U'
+  return user.value.name?.charAt(0).toUpperCase() +  user.value.surname?.charAt(0).toUpperCase() || 'U'
 })
 </script>
 
@@ -118,7 +114,7 @@ const userInitials = computed(() => {
             {{ userInitials }}
           </div>
           <div class="min-w-0 flex-1 text-left">
-            <p class="truncate text-sm font-semibold">{{ user.name }}</p>
+            <p class="truncate text-sm font-semibold">{{ user.name + ' ' + user.surname }}</p>
             <p class="truncate text-xs text-muted-foreground">{{ user.email }}</p>
           </div>
           <ChevronDown class="h-4 w-4" />
@@ -132,9 +128,18 @@ const userInitials = computed(() => {
             </Link>
           </DropdownMenuItem>
 
+          <DropdownMenuItem v-if="user.role_id === 1" class="cursor-pointer">
+            <Link href="/users" view-transition replace class="flex w-full items-center rounded-lg text-sm text-sidebar-foreground">
+              <ListIcon class="mr-2 h-4 w-4" />
+              <span>Usuarios</span>
+            </Link>
+          </DropdownMenuItem>
+
           <DropdownMenuItem class="cursor-pointer">
-            <Settings class="mr-2 h-4 w-4" />
-            <span>Ajustes</span>
+            <Link href="/users" view-transition replace class="flex w-full items-center rounded-lg text-sm text-sidebar-foreground">
+                <Settings class="mr-2 h-4 w-4" />
+                <span>Ajustes</span>
+            </Link>
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />

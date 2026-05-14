@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { ChevronRightSquare } from 'lucide-vue-next'
+import { ChevronLeftSquare } from 'lucide-vue-next'
 import ThemeToggle from './ThemeToggle.vue';
 
 const isRotated = ref(false)
@@ -31,7 +31,7 @@ const toggleRotation = () => {
           class="inline-flex h-10 w-10 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-primary/10 hover:text-foreground"
           @click="toggleRotation(); $emit('toggle-sidebar')"
         >
-        <ChevronRightSquare :class="isRotated ? 'transform rotate-180 transition-transform duration-300' : 'transition-transform duration-300'" />
+        <ChevronLeftSquare :class="isRotated ? 'transform rotate-180 transition-transform duration-300' : 'transition-transform duration-300'" />
 
         </button>
 

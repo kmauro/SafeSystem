@@ -15,6 +15,7 @@ defineOptions({
 
 const page = usePage()
 const user = computed(() => page.props.auth?.user)
+const firstName = computed(() => user.value?.name.split(' ')[0] || 'Usuario')
 </script>
 
 <template>
@@ -23,7 +24,7 @@ const user = computed(() => page.props.auth?.user)
       <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div class="space-y-2">
           <p class="text-sm font-medium text-muted-foreground">SafeSystem</p>
-          <h1 class="text-2xl font-semibold">Bienvenido, {{ user?.name }}</h1>
+          <h1 class="text-2xl font-semibold">Bienvenido, {{ firstName }} {{ user?.surname }}</h1>
           <p class="max-w-2xl text-sm text-muted-foreground">
             Tu sesion esta activa. Puedes continuar al modulo CRM o al panel CRUD.
           </p>

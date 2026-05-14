@@ -12,7 +12,7 @@ defineProps({
 })
 
 const form = useForm({
-  email: '',
+  username: '',
   password: '',
   remember: false,
 }).dontRemember('password')
@@ -34,18 +34,18 @@ function submit() {
   >
     <form class="space-y-5" @submit.prevent="submit">
       <div class="space-y-2">
-        <Label for="email">Email</Label>
+        <Label for="username">Nombre de usuario</Label>
         <Input
-          id="email"
-          v-model="form.email"
-          type="email"
-          name="email"
+          id="username"
+          v-model="form.username"
+          type="text"
+          name="username"
           autocomplete="email"
           autofocus
-          :aria-invalid="Boolean(form.errors.email)"
-          placeholder="nombre@correo.com"
+          :aria-invalid="Boolean(form.errors.username)"
+          placeholder="nombre de usuario"
         />
-        <p v-if="form.errors.email" class="text-sm text-destructive">{{ form.errors.email }}</p>
+        <p v-if="form.errors.username" class="text-sm text-destructive">{{ form.errors.username }}</p>
       </div>
 
       <div class="space-y-2">

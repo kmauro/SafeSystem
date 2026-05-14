@@ -25,17 +25,40 @@ class UserRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
+            'surname' => ['required', 'string', 'max:255'],
+            'username' => ['required', 'string', 'max:255', Rule::unique(User::class, 'username')],
+            'phone' => ['nullable', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class, 'email')],
             'password' => ['required', 'string', 'confirmed', Password::defaults()],
+            'role_id' => ['required', 'integer', 'exists:roles,id'],
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'El nombre es obligatorio.',
+            'surname.required' => 'El apellido es obligatorio.',
+            'username.required' => 'El nombre de usuario es obligatorio.',
+            'username.unique' => 'El nombre de usuario ya está en uso.',
+            'phone.string' => 'El teléfono debe ser una cadena de texto.',
+            'email.required' => 'El correo electrónico es obligatorio.',
+            'email.email' => 'El correo electrónico debe ser una dirección de correo válida.',
+            'email.unique' => 'El correo electrónico ya está en uso.',
+            'password.required' => 'La contraseña es obligatoria.',
+            'password.confirmed' => 'La confirmación de la contraseña no coincide.',
+            'role_id.required' => 'El rol es obligatorio.',
+            'role_id.integer' => 'El rol debe ser un número entero.',
+            'role_id.exists' => 'El rol seleccionado no existe.',
         ];
     }
 
     /**
-     * @return array{name: string, email: string, password: string}
+     * @return array{name: string, email: string, password: string, surname: string, username: string, phone: string, role_id: int}
      */
     public function validatedUserData(): array
     {
-        /** @var array{name: string, email: string, password: string} $validated */
+        /** @var array{name: string, email: string, password: string, surname: string, username: string, phone: string, role_id: int} $validated */
         $validated = $this->validated();
 
         return $validated;

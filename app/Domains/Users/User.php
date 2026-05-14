@@ -9,17 +9,27 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use App\Domains\Roles\Role;
 
-#[Fillable(['name', 'email', 'password'])]
+#[Fillable(['name', 'email', 'password', 'surname', 'username', 'phone', 'role_id'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    protected $attributes = [
+        'role_id' => 2,
+    ];
+
     protected static function newFactory(): UserFactory
     {
         return UserFactory::new();
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
     }
 
     /**
