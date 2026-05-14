@@ -10,6 +10,7 @@ import {
   User,
   ShieldCheck,
   ListIcon,
+  Table2,
 } from 'lucide-vue-next'
 import { Link, usePage } from '@inertiajs/vue3'
 
@@ -48,7 +49,7 @@ const menus = [
     id: 'crud',
     title: 'CRUD',
     items: [
-      { label: 'Dashboard', icon: LayoutDashboard, href: '/crud/dashboard' },
+      { label: 'Dashboard', icon: Table2, href: '/crud/dashboard' },
       { label: 'Lista', icon: List, href: '/crud/lista' },
       { label: 'Agregar', icon: Plus, href: '/crud/agregar' },
     ],
@@ -62,8 +63,8 @@ const userInitials = computed(() => {
 </script>
 
 <template>
-  <aside class="min-h-full w-80 shrink-0 flex-col gap-0 border-r border-sidebar-border bg-sidebar text-sidebar-foreground lg:flex">
-    <Link href="/" view-transition replace class="flex items-center gap-3 border-b border-sidebar-border p-6 pb-4">
+  <aside class="min-h-full w-80 shrink-0 flex-col gap-0  bg-background text-sidebar-foreground lg:flex">
+    <Link href="/" view-transition replace class="flex items-center gap-3 border-b border-sidebar-border p-6 pb-3">
         <span class="grid size-11 place-items-center rounded-lg bg-primary text-primary-foreground">
             <ShieldCheck class="size-5" />
         </span>
@@ -72,7 +73,7 @@ const userInitials = computed(() => {
         </span>
     </Link>
 
-    <div class="flex-1 overflow-y-auto p-6">
+    <div class="flex-1 overflow-y-auto p-6 border-r border-sidebar-border">
       <div class="space-y-4">
         <template v-for="menu in menus" :key="menu.id">
           <Collapsible :default-open="true">
@@ -107,7 +108,7 @@ const userInitials = computed(() => {
       </div>
     </div>
 
-    <div class="space-y-4 border-t border-sidebar-border p-6">
+    <div class="space-y-4 border-t border-sidebar-border p-6 border-r border-sidebar-border">
       <DropdownMenu>
         <DropdownMenuTrigger class="flex w-full items-center gap-3 rounded-lg px-3 py-2 hover:bg-primary/10">
           <div class="grid h-9 w-9 place-items-center rounded-full bg-primary text-xs font-semibold text-primary-foreground">
@@ -136,7 +137,7 @@ const userInitials = computed(() => {
           </DropdownMenuItem>
 
           <DropdownMenuItem class="cursor-pointer">
-            <Link href="/users" view-transition replace class="flex w-full items-center rounded-lg text-sm text-sidebar-foreground">
+            <Link href="/settings" view-transition replace class="flex w-full items-center rounded-lg text-sm text-sidebar-foreground">
                 <Settings class="mr-2 h-4 w-4" />
                 <span>Ajustes</span>
             </Link>
@@ -144,8 +145,8 @@ const userInitials = computed(() => {
 
           <DropdownMenuSeparator />
 
-          <DropdownMenuItem as-child>
-            <Link href="/logout" method="post" as="button" class="w-full cursor-pointer text-red-400">
+          <DropdownMenuItem as-child class="cursor-pointer">
+            <Link href="/logout" method="post" as="button" class="w-full text-red-400 rounded-lg text-sm">
               <LogOut class="mr-2 h-4 w-4" />
               <span>Cerrar sesion</span>
             </Link>

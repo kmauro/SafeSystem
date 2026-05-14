@@ -22,7 +22,7 @@ const toggleRotation = () => {
 </script>
 
 <template>
-  <div class="border-b border-border bg-background">
+  <div class="border-b border-border bg-background py-2">
     <!-- Barra superior con botón de menú y breadcrumbs -->
     <div class="flex items-center justify-between gap-4 px-6 py-3">
       <div class="flex items-center gap-4">

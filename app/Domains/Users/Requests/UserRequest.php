@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Domains\Users;
+namespace App\Domains\Users\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use App\Domains\Users\Models\User;
 
 class UserRequest extends FormRequest
 {
@@ -54,11 +55,11 @@ class UserRequest extends FormRequest
     }
 
     /**
-     * @return array{name: string, email: string, password: string, surname: string, username: string, phone: string, role_id: int}
+     * @return array{name: string, email: string, password: string, surname: string, username: string, phone: string|null, role_id: int}
      */
     public function validatedUserData(): array
     {
-        /** @var array{name: string, email: string, password: string, surname: string, username: string, phone: string, role_id: int} $validated */
+        /** @var array{name: string, email: string, password: string, surname: string, username: string, phone: string|null, role_id: int} $validated */
         $validated = $this->validated();
 
         return $validated;

@@ -1,18 +1,36 @@
 <?php
 
-namespace App\Domains\Users;
+namespace App\Domains\Users\Controllers;
 
+use App\Domains\Users\Requests\UserRequest;
+use App\Domains\Users\Requests\UpdateProfileRequest;
+use App\Domains\Users\Requests\UpdatePasswordRequest;
+use App\Domains\Users\Requests\LoginRequest;
+use App\Domains\Users\Services\UserService;
+use App\Domains\Users\Models\User;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+
 use Inertia\Inertia;
 
 use Inertia\Response as InertiaResponse;
 
 class UserController extends Controller
 {
+
+
+    public function showSignup(): InertiaResponse
+    {
+        return Inertia::render('Auth/Signup', [
+            'title' => 'Sign Up',
+        ]);
+    }
+
     public function showLogin(): InertiaResponse
     {
         return Inertia::render('Auth/Login', [
@@ -20,13 +38,10 @@ class UserController extends Controller
         ]);
     }
 
-    public function showProfile(UserService $userService): InertiaResponse
+    public function showSettings(): InertiaResponse
     {
-        return Inertia::render('User/Profile', [
-            'title' => 'Mi Perfil',
-            'user' => Auth::user()->load('role'),
-            'isCurrentUser' => true,
-            'roles' => $userService->getAllRoles(),
+        return Inertia::render('User/Settings', [
+            'title' => 'Ajustes de Usuario',
         ]);
     }
 
@@ -41,45 +56,51 @@ class UserController extends Controller
     public function showUser(int $id, UserService $userService): InertiaResponse
     {
         $user = $userService->getUserById($id);
-
         if (! $user) {
             abort(404);
         }
+        $isCurrentUser = Auth::id() === $user->id;
+        return $this->renderProfile("Perfil de {$user->name} {$user->surname}", $userService->getAllRoles(), $user, $isCurrentUser);
+    }
 
+    public function showProfile(UserService $userService): InertiaResponse
+    {
+        $user = $userService->getAuthenticatedUser();
+
+        if (! $user) {
+            abort(403);
+        }
+
+        return $this->renderProfile('Mi Perfil', $userService->getAllRoles(), $user, true);
+    }
+
+    private function renderProfile(string $title, Collection $roles, User $user, bool $isCurrentUser): InertiaResponse
+    {
         return Inertia::render('User/Profile', [
-            'title' => 'Perfil de ' . $user->name . ' ' . $user->surname,
+            'title' => $title,
             'user' => $user->load('role'),
-            'isCurrentUser' => Auth::id() === $user->id,
-            'roles' => $userService->getAllRoles(),
+            'isCurrentUser' => $isCurrentUser,
+            'roles' => $roles,
         ]);
     }
 
-    public function updateProfile(Request $request, UserService $userService): RedirectResponse
+    public function updateProfile(UpdateProfileRequest $request, UserService $userService): RedirectResponse
     {
-        $user = $userService->updateProfile($request->id, $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
-            'surname' => ['required', 'string', 'max:255'],
-            'username' => ['required', 'string', 'max:255'],
-            'phone' => ['required', 'string', 'max:20'],
-            'role_id' => ['required', 'integer', 'exists:roles,id'],
-        ]));
+        $user = $userService->updateProfile($request->id, $request->validatedProfileData());
         if ($user) {
             return back()->with('success', 'Perfil actualizado correctamente.');
-        }else{
-            return back()->with(['error' => 'Error al actualizar el perfil.']);
+        }else {
+            return back()->with('error', 'No se pudo actualizar el perfil. Inténtalo de nuevo.');
         }
 
     }
 
-    public function updatePassword(Request $request, UserService $userService): RedirectResponse
+    public function updatePassword(UpdatePasswordRequest $request, UserService $userService): RedirectResponse
     {
-        $data = $request->validate([
-            'current_password' => ['required', 'string'],
-            'new_password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        $data = $request->validatedPasswordData();
+        $userId = $userService->getAuthenticatedUser()->id;
 
-        if (! $userService->updatePassword(Auth::id(), $data['current_password'], $data['new_password'])) {
+        if (! $userService->updatePassword($userId, $data['current_password'], $data['new_password'])) {
             throw ValidationException::withMessages([
                 'current_password' => 'La contraseña actual es incorrecta.',
             ]);
@@ -88,14 +109,9 @@ class UserController extends Controller
         return to_route('profile')->with('success', 'Contraseña actualizada correctamente.');
     }
 
-
-    public function login(Request $request, UserService $userService): RedirectResponse
+    public function login(LoginRequest $request, UserService $userService): RedirectResponse
     {
-        $credentials = $request->validate([
-            'username' => ['required', 'string'],
-            'password' => ['required', 'string'],
-            'remember' => ['nullable', 'boolean'],
-        ]);
+        $credentials = $request->validatedLoginData();
 
         if (! $userService->authenticate($credentials['username'], $credentials['password'], $request->boolean('remember'))) {
             throw ValidationException::withMessages([
@@ -108,17 +124,16 @@ class UserController extends Controller
         return redirect()->intended(route('home'));
     }
 
-    public function showSignup(): InertiaResponse
-    {
-        return Inertia::render('Auth/Signup', [
-            'title' => 'Sign Up',
-        ]);
-    }
+
+
+
 
     public function signup(UserRequest $request, UserService $userService): RedirectResponse
     {
         $user = $userService->register($request->validatedUserData());
-
+        if(! $user) {
+            return back()->with('error', 'No se pudo registrar el usuario. Inténtalo de nuevo.');
+        }
         Auth::login($user);
 
         $request->session()->regenerate();

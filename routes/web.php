@@ -1,22 +1,22 @@
 <?php
 
-use App\Domains\Users\UserController;
+use App\Domains\Users\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::middleware('guest')->controller(UserController::class)->group(function () {
     Route::get('/login', 'showLogin')->name('login');
-    Route::post('/login', 'login')->name('login.store');
-
     Route::get('/signup', 'showSignup')->name('signup');
-    Route::post('/signup', 'signup')->name('signup.store');
 
+    Route::post('/login', 'login')->name('login.store');
+    Route::post('/signup', 'signup')->name('signup.store');
 });
 
 Route::middleware('auth')->controller(UserController::class)->group(function () {
     Route::get('/profile', 'showProfile')->name('profile');
     Route::get('/users', 'showUsers')->name('users.index');
     Route::get('/users/{id}', 'showUser')->name('users.show');
+    Route::get('/settings', 'showSettings')->name('user.settings');
     Route::post('/profile', 'updateProfile')->name('profile.update');
     Route::post('/profile/updatePassword', 'updatePassword')->name('profile.updatePassword');
 });

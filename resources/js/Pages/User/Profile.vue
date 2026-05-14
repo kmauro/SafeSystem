@@ -19,6 +19,8 @@ const props = defineProps({
     isCurrentUser: Boolean,
 })
 
+const isAdmin = props.user.role_id === 1;
+
 const isEditing = ref(false);
 const changingPass = ref(false);
 
@@ -92,8 +94,7 @@ function onError() {
         leave-to-class="opacity-0 -translate-y-3"
     >
         <div
-            v-if="
-            showMessage"
+            v-if="showMessage"
             class="fixed top-6 left-1/2 -translate-x-1/2 z-50
                    bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg"
             :class="{'bg-green-600' : successMessage,
@@ -107,7 +108,7 @@ function onError() {
 
         <div class="flex items-center justify-between mb-4">
             <h2 class="text-lg font-semibold">Información del Perfil</h2>
-            <Button variant="outline" @click="isEditing = !isEditing" class="ml-auto"
+            <Button variant="outline" @click="isEditing = !isEditing" v-if="isCurrentUser" class="ml-auto"
             :class="{
                 'bg-primary text-white hover:bg-destructive/90' : isEditing,
 
@@ -130,7 +131,7 @@ function onError() {
             </p>
 
             <Label for="role">Rol:</Label>
-            <NativeSelect id="role" v-model="profileForm.role_id" :disabled="!isEditing" :aria-invalid="Boolean(profileForm.errors.role_id)">
+            <NativeSelect id="role" v-model="profileForm.role_id" :disabled="!isAdmin || !isEditing" :aria-invalid="Boolean(profileForm.errors.role_id)">
                 <NativeSelectOption v-for="role in roles" :key="role.id" :value="role.id">
                     {{ role.role_name }}
                 </NativeSelectOption>

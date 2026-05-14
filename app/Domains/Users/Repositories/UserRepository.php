@@ -1,8 +1,10 @@
 <?php
 
-namespace App\Domains\Users;
+namespace App\Domains\Users\Repositories;
 
+use App\Domains\Users\Models\User;
 use App\Domains\Roles\Role;
+use Illuminate\Database\Eloquent\Collection;
 
 class UserRepository
 {
@@ -13,7 +15,7 @@ class UserRepository
 
     public function find(int $userId): ?User
     {
-        return User::find($userId);
+        return User::with('role')->find($userId);
     }
 
     public function create(array $data): User
@@ -21,15 +23,15 @@ class UserRepository
         return User::create($data);
     }
 
-    public function all(): array
+    public function all(): Collection
     {
-        return User::with('role')->get()
-        ->toArray();
+        return User::with('role')->get();
+
     }
 
-    public function getAllRoles(): array
+    public function getAllRoles(): Collection
     {
-        return Role::all()->toArray();
+        return Role::all();
     }
 
     public function update(int $userId, array $data): User
