@@ -17,6 +17,7 @@ const form = useForm({
   username: '',
   phone: '',
   password: '',
+  role_id: 2,
   password_confirmation: '',
 }).dontRemember('password', 'password_confirmation')
 

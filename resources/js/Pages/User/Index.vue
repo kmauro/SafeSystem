@@ -3,6 +3,7 @@ import AppLayout from '@/Layouts/AppLayout.vue';
 import { Label } from '@/Components/ui/label'
 import { Input } from '@/Components/ui/input'
 import { Link } from '@inertiajs/vue3';
+import NotificationToast from '@/Components/ui/notification-toast/NotificationToast.vue';
 defineOptions({
   layout: AppLayout,
 })
@@ -14,6 +15,7 @@ defineProps({
 </script>
 
 <template>
+    <NotificationToast />
     <div class="space-y-6">
         <section v-for="user in users" :key="user.id" class="space-y-4 rounded-lg border border-border bg-card p-6 shadow-sm">
             <div class="flex items-center justify-between">

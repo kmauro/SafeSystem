@@ -1,7 +1,7 @@
 <script setup>
 import { Link } from '@inertiajs/vue3'
-import { ShieldCheck } from 'lucide-vue-next'
-import ThemeToggle from '@/Components/ThemeToggle.vue'
+import ThemeToggle from '@/Components/ui/theme-toggle/ThemeToggle.vue'
+import ApplicationLogo from '@/Components/ui/application-logo/ApplicationLogo.vue'
 
 defineProps({
   title: String,
@@ -15,12 +15,7 @@ defineProps({
 <template>
     <div class="mx-auto min-h-screen w-full grid-cols-1 lg:grid-cols-[1fr_420px]">
         <div class="hidden items-center justify-between gap-6 border-b border-border bg-card p-6 lg:flex">
-            <Link href="/login" class="flex items-center gap-3 text-lg font-semibold">
-                <span class="grid size-11 place-items-center rounded-lg bg-primary text-primary-foreground">
-                    <ShieldCheck class="size-5" />
-                </span>
-                SafeSystem
-            </Link>
+            <ApplicationLogo class="h-6 w-6" />
             <ThemeToggle />
         </div>
 
@@ -29,12 +24,7 @@ defineProps({
       <main class="flex min-h-screen items-center justify-center px-6 py-10">
         <div class="w-full max-w-sm">
           <div class="mb-8 flex items-center justify-between lg:hidden">
-            <Link href="/login" class="flex items-center gap-2 text-base font-semibold">
-              <span class="grid size-9 place-items-center rounded-lg bg-primary text-primary-foreground">
-                <ShieldCheck class="size-4" />
-              </span>
-              SafeSystem
-            </Link>
+            <ApplicationLogo class="h-6 w-6" />
           </div>
 
           <div class="rounded-lg border border-border bg-card p-6 text-card-foreground shadow-sm">

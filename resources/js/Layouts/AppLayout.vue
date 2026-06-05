@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import Sidebar from '@/Components/ui/Sidebar/Sidebar.vue'
-import PageTitle from '@/Components/PageTitle.vue'
+import PageTitle from '@/Components/ui/page-title/PageTitle.vue'
 
 const sidebarOpen = ref(true)
 
@@ -20,11 +20,7 @@ onMounted(() => {
 
 <template>
     <div class="app-container">
-
-
-
         <div class="main-container">
-
             <Transition name="sidebar-collapse">
                 <div v-show="sidebarOpen" class="sidebar-wrapper">
                     <Sidebar :sidebar-open="sidebarOpen" @toggle-sidebar="toggleSidebar" />
@@ -40,13 +36,7 @@ onMounted(() => {
                     <slot />
                 </div>
             </main>
-
-
-
         </div>
-
-
-
     </div>
 </template>
 

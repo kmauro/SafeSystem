@@ -23,6 +23,12 @@ use Inertia\Response as InertiaResponse;
 class UserController extends Controller
 {
 
+    public function showForgotPassword(): InertiaResponse
+    {
+        return Inertia::render('User/ChangePassword', [
+            'title' => 'Cambiar la contraseña',
+        ]);
+    }
 
     public function showSignup(): InertiaResponse
     {
@@ -60,26 +66,29 @@ class UserController extends Controller
             abort(404);
         }
         $isCurrentUser = Auth::id() === $user->id;
-        return $this->renderProfile("Perfil de {$user->name} {$user->surname}", $userService->getAllRoles(), $user, $isCurrentUser);
+        $isAdmin = Auth::user()->role_id === 1;
+        return $this->renderProfile("Perfil de {$user->name} {$user->surname}", $userService->getAllRoles(), $user, $isCurrentUser, $isAdmin);
     }
 
     public function showProfile(UserService $userService): InertiaResponse
     {
+        $isAdmin = Auth::user()->role_id === 1;
         $user = $userService->getAuthenticatedUser();
 
         if (! $user) {
             abort(403);
         }
 
-        return $this->renderProfile('Mi Perfil', $userService->getAllRoles(), $user, true);
+        return $this->renderProfile('Mi Perfil', $userService->getAllRoles(), $user, true, $isAdmin);
     }
 
-    private function renderProfile(string $title, Collection $roles, User $user, bool $isCurrentUser): InertiaResponse
+    private function renderProfile(string $title, Collection $roles, User $user, bool $isCurrentUser, bool $isAdmin = false): InertiaResponse
     {
         return Inertia::render('User/Profile', [
             'title' => $title,
             'user' => $user->load('role'),
             'isCurrentUser' => $isCurrentUser,
+            'isAdmin' => $isAdmin,
             'roles' => $roles,
         ]);
     }

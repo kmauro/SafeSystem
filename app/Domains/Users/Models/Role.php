@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Domains\Roles;
+namespace App\Domains\Users\Models;
 
-use App\Domains\Users\Models\User;
 use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model

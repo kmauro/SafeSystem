@@ -8,12 +8,11 @@ import {
   Plus,
   Settings,
   User,
-  ShieldCheck,
   ListIcon,
   Table2,
 } from 'lucide-vue-next'
 import { Link, usePage } from '@inertiajs/vue3'
-
+import ApplicationLogo from '@/Components/ui/application-logo/ApplicationLogo.vue'
 import Collapsible from '../collapsible/Collapsible.vue'
 import CollapsibleTrigger from '../collapsible/CollapsibleTrigger.vue'
 import CollapsibleContent from '../collapsible/CollapsibleContent.vue'
@@ -37,15 +36,22 @@ const page = usePage()
 
 const menus = [
   {
-    id: 'crm',
-    title: 'CRM',
+    id: 'clients',
+    title: 'Clientes',
     items: [
-      { label: 'Dashboard', icon: LayoutDashboard, href: '/crm/dashboard' },
-      { label: 'Lista', icon: List, href: '/crm/lista' },
-      { label: 'Agregar', icon: Plus, href: '/crm/agregar' },
+      { label: 'Dashboard', icon: LayoutDashboard, href: '/client/dashboard' },
+      { label: 'Lista', icon: List, href: '/client/index' },
+      { label: 'Agregar cliente', icon: Plus, href: '/client/add' },
     ],
-  },
-  {
+  },{
+    id: 'installations',
+    title: 'Instalaciones',
+    items: [
+      { label: 'Dashboard', icon: LayoutDashboard, href: '/installation/dashboard' },
+      { label: 'Lista', icon: List, href: '/installation/index' },
+      { label: 'Agregar instalación', icon: Plus, href: '/installation/add' },
+    ],
+  },{
     id: 'crud',
     title: 'CRUD',
     items: [
@@ -56,7 +62,7 @@ const menus = [
   },
 ]
 
-const user = computed(() => page.props.auth?.user ?? { name: 'Usuario', email: '' , surname: 'Hola', username: '', phone: '' })
+const user = computed(() => page.props.auth?.user ?? { name: 'Usuario', email: '' , surname: '', username: '', phone: '' })
 const userInitials = computed(() => {
   return user.value.name?.charAt(0).toUpperCase() +  user.value.surname?.charAt(0).toUpperCase() || 'U'
 })
@@ -65,12 +71,7 @@ const userInitials = computed(() => {
 <template>
   <aside class="min-h-full w-80 shrink-0 flex-col gap-0  bg-background text-sidebar-foreground lg:flex">
     <Link href="/" view-transition replace class="flex items-center gap-3 border-b border-sidebar-border p-6 pb-3">
-        <span class="grid size-11 place-items-center rounded-lg bg-primary text-primary-foreground">
-            <ShieldCheck class="size-5" />
-        </span>
-        <span  class="text-lg font-semibold">
-            SafeSystem
-        </span>
+        <ApplicationLogo class="h-6 w-6" />
     </Link>
 
     <div class="flex-1 overflow-y-auto p-6 border-r border-sidebar-border">
