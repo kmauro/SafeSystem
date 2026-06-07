@@ -21,12 +21,12 @@ return new class extends Migration
 
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('category');
+            $table->string('name');
         });
 
         Schema::create('states', function (Blueprint $table) {
             $table->id();
-            $table->string('state');
+            $table->string('name');
             $table->string('color');
         });
 

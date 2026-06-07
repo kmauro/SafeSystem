@@ -3,6 +3,7 @@
 use App\Domains\Users\Controllers\UserController;
 use App\Domains\Clients\Controllers\ClientController;
 use App\Domains\Clients\Controllers\InstallationController;
+use App\Domains\Configs\Controllers\Configcontroller;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -18,7 +19,6 @@ Route::middleware('auth')->controller(UserController::class)->group(function () 
     Route::get('/profile', 'showProfile')->name('profile');
     Route::get('/users', 'showUsers')->name('users.index');
     Route::get('/users/{id}', 'showUser')->name('users.show');
-    Route::get('/settings', 'showSettings')->name('user.settings');
     Route::get('/user/forgot', 'showForgotPassword')->name('user.forgot');
     Route::post('/profile', 'updateProfile')->name('profile.update');
     Route::post('/profile/updatePassword', 'updatePassword')->name('profile.updatePassword');
@@ -47,7 +47,11 @@ Route::middleware('auth')->controller(InstallationController::class)->group(func
     Route::post('/installation/{id}/delete', 'deleteInstallation')->name('installation.delete');
 });
 
-
+Route::middleware('auth')->controller(Configcontroller::class)->group(function () {
+    Route::get('/settings', 'showSettings')->name('user.settings');
+    Route::post('/config/addCategory', 'addCategory')->name('add.category');
+    Route::post('/config/addState', 'addState')->name('add.state');
+});
 
 Route::post('/logout', [UserController::class, 'logout'])
     ->middleware('auth')
