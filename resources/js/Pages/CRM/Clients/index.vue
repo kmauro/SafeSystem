@@ -23,7 +23,7 @@ const clients = props.clients;
             <div>
                 <Link
                 view-transition
-                :href="`/client/${client.id}`"
+                :href="`/clients/${client.id}`"
                 class="flex items-center bg-primary text-white font-semibold hover:bg-primary/10 gap-2 rounded-lg px-3 py-2 text-sm text-sidebar-foreground"
             >
                 <span>Ver mas</span>

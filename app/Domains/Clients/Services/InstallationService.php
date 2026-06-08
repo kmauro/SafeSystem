@@ -18,13 +18,12 @@ class InstallationService
         return $this->installationRepository->createInstallation($data);
     }
 
-    public function getAllInstallations(): Collection
+    public function getInstallationById(int $id): Installation
     {
-        return $this->installationRepository->getAll();
+        return $this->installationRepository->getInstallationById($id);
     }
 
-
-    public function index(Request $request)
+    public function index(Request $request): Collection
     {
         $search = $request->search ?? '';
         $state = $request->state;
@@ -37,5 +36,15 @@ class InstallationService
 
         return $query
             ->get();
+    }
+
+    public function updateInstallation(array $data): int
+    {
+        return $this->installationRepository->updateInstallation($data);
+    }
+
+    public function deleteInstallation(int $id): bool
+    {
+        return $this->installationRepository->deleteInstallation($id);
     }
 }
