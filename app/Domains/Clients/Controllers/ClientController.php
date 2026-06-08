@@ -41,9 +41,11 @@ class ClientController extends Controller
     public function showClient(int $id): InertiaResponse
     {
         $client = $this->clientService->getClientById($id);
+        $installations = $this->clientService->getClientInstallations($id);
         return Inertia::render('CRM/Clients/ViewClient', [
             'title' => 'Detalle del Cliente',
             'client' => $client,
+            'installations' => $installations,
         ]);
     }
 

@@ -38,22 +38,25 @@ const menus = [
   {
     id: 'clients',
     title: 'Clientes',
+    href: '/client',
     items: [
       { label: 'Dashboard', icon: LayoutDashboard, href: '/client/dashboard' },
-      { label: 'Lista', icon: List, href: '/client/index' },
+      { label: 'Lista', icon: List, href: '/clients' },
       { label: 'Agregar cliente', icon: Plus, href: '/client/add' },
     ],
   },{
     id: 'installations',
     title: 'Instalaciones',
+    href: '/installation',
     items: [
       { label: 'Dashboard', icon: LayoutDashboard, href: '/installation/dashboard' },
-      { label: 'Lista', icon: List, href: '/installation/index' },
+      { label: 'Lista', icon: List, href: '/installations' },
       { label: 'Agregar instalación', icon: Plus, href: '/installation/add' },
     ],
   },{
     id: 'crud',
     title: 'CRUD',
+    href: '/crud',
     items: [
       { label: 'Dashboard', icon: Table2, href: '/crud/dashboard' },
       { label: 'Lista', icon: List, href: '/crud/lista' },
@@ -79,7 +82,11 @@ const userInitials = computed(() => {
         <template v-for="menu in menus" :key="menu.id">
           <Collapsible :default-open="true">
             <template #default="{ open }">
-              <CollapsibleTrigger class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-semibold text-sidebar-foreground hover:bg-primary/10">
+              <CollapsibleTrigger class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-semibold text-sidebar-foreground"
+              :class="{
+                    'bg-primary text-primary-foreground font-semibold': $page.url.startsWith(menu.href),
+                    'hover:bg-primary/10': !$page.url.startsWith(menu.href),
+                  }">
                 <span>{{ menu.title }}</span>
                 <ChevronDown :class="['h-4 w-4 transition-transform', open ? 'rotate-180' : '']" />
               </CollapsibleTrigger>
@@ -92,8 +99,8 @@ const userInitials = computed(() => {
                   replace
                   :href="item.href || '#'"
                   :class="{
-                    'bg-primary text-primary-foreground font-semibold': $page.url === item.href,
-                    'hover:bg-primary/10': $page.url !== item.href,
+                    'bg-primary text-primary-foreground font-semibold': $page.url.startsWith(item.href),
+                    'hover:bg-primary/10': !$page.url.startsWith(menu.href),
                   }"
                   class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-sidebar-foreground"
                 >

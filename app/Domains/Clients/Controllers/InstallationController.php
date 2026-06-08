@@ -59,6 +59,23 @@ class InstallationController extends Controller
         ]);
     }
 
+    public function showInstallation(int $id)
+    {
+        $installation = $this->installationService->getInstallationById($id);
+        $clients = $this->clientService->getAllClients();
+        $categories = $this->configService->getCategories();
+        $states = $this->configService->getStates();
+        $users = $this->userService->getAllUsers();
+        return Inertia::render('CRM/Installations/ViewInstallation', [
+            'title' => 'Instalacion',
+            'installation' => $installation,
+            'clients' => $clients,
+            'categories' => $categories,
+            'states' => $states,
+            'users' => $users,
+        ]);
+    }
+
     public function addInstallation(NewInstallationRequest $request): RedirectResponse
     {
         $validated = $request->validatedInstallationData();
@@ -70,12 +87,28 @@ class InstallationController extends Controller
         }
     }
 
-    public function viewInstallation(int $id)
+    public function updateInstallation(Request $request): RedirectResponse
     {
-        $installation = $id;
-        return Inertia::render('CRM/Installations/ViewInstallation', [
-            'title' => 'Instalacion',
-            'installation' => $installation
-        ]);
+        $validated = $request->validate([]);
+        $installation = $this->installationService->updateInstallation($request->toArray());
+        if($installation){
+            return back()->with('success', 'La instalación se edito correctamente.');
+        }else{
+            return back()->with('error', 'hubo un problema, intentelo de nuevo.');
+        }
     }
+
+    public function deleteInstallation(int $id): RedirectResponse
+    {
+        $response = $this->installationService->deleteInstallation($id);
+        if($response){
+            return redirect()
+            ->route('installation.index')
+            ->with('success', 'Instalación eliminada correctamente.');
+        }else{
+            return back()->with('error', 'No se pudo eliminar. Intentelo de nuevo.');
+        }
+    }
+
+
 }

@@ -28,8 +28,8 @@ Route::middleware('auth')->controller(UserController::class)->group(function () 
 Route::middleware('auth')->controller(ClientController::class)->group(function () {
     Route::get('/client/dashboard', 'showDashboard')->name('client.dashboard');
     Route::get('/client/add', 'showAddClient')->name('client.add');
-    Route::get('/client/index', 'showIndex')->name('clients.index');
-    Route::get('/client/{id}', 'showClient')->name('clients.show');
+    Route::get('/clients', 'showIndex')->name('clients.index');
+    Route::get('/clients/{id}', 'showClient')->name('clients.show');
 
     Route::post('/client/add', 'addClient')->name('client.store');
     Route::post('/client/update', 'updateClient')->name('client.update');
@@ -39,8 +39,8 @@ Route::middleware('auth')->controller(ClientController::class)->group(function (
 Route::middleware('auth')->controller(InstallationController::class)->group(function () {
     Route::get('/installation/dashboard', 'showDashboard')->name('installation.dashboard');
     Route::get('/installation/add', 'showAddInstallation')->name('installation.add');
-    Route::get('/installation/index', 'showIndex')->name('installation.index');
-    Route::get('/installation/{id}', 'showInstallation')->name('installation.show');
+    Route::get('/installations', 'showIndex')->name('installation.index');
+    Route::get('/installations/{id}', 'showInstallation')->name('installation.show');
 
     Route::post('/installation/add', 'addInstallation')->name('installation.store');
     Route::post('/installation/update', 'updateInstallation')->name('installation.update');

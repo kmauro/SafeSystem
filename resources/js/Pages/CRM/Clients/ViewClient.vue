@@ -1,6 +1,6 @@
 <script setup>
 import AppLayout from '@/Layouts/AppLayout.vue';
-import { useForm } from '@inertiajs/vue3';
+import { Link, useForm } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import { Edit, CircleXIcon } from 'lucide-vue-next';
 import Input from '@/Components/ui/input/Input.vue';
@@ -8,6 +8,7 @@ import Button from '@/Components/ui/button/Button.vue';
 import NotificationToast from '@/Components/ui/notification-toast/NotificationToast.vue';
 import Label from '@/Components/ui/label/Label.vue';
 import Alert from '@/Components/ui/alert/Alert.vue';
+
 
 defineOptions({
     layout: AppLayout,
@@ -17,6 +18,7 @@ const isEditing = ref(false);
 
 const props = defineProps({
     client: Object,
+    installations: Object,
 })
 
 const form = useForm({
@@ -57,7 +59,7 @@ function deleteClient(clientId) {
                             :label="'Borrar cliente'"
                             :variant="'destructive'"
                             :title="'Eliminar cliente?'"
-                            :description="'Esta acción no se puede deshacer. Eliminará la información de este cliente de forma permanente.'"
+                            :description="'Esta acción no se puede deshacer. Eliminará la información de este cliente de forma permanente, junto con sus instalaciones.'"
                             />
                 </div>
                 <Button variant="outline" @click="isEditing = !isEditing" class="ml-auto"
@@ -138,5 +140,24 @@ function deleteClient(clientId) {
             <Button  :disabled="form.processing" type="submit" v-if="isEditing">Editar cliente</Button>
 
         </form>
+    </section>
+
+    <section class="space-y-1 mt-2" >
+        <h2>Instalaciones:</h2>
+
+        <section v-for="installation in installations" class="border p-4 rounded-lg shadow-md flex justify-between mb-4" :key="installation.id">
+            <div class="space-y-2">
+                <h2 class="text-2xl font-semibold">{{ installation.address }}</h2>
+            </div>
+            <div>
+                <Link
+                view-transition
+                :href="`/installations/${installation.id}`"
+                class="flex items-center bg-primary text-white font-semibold hover:bg-primary/10 gap-2 rounded-lg px-3 py-2 text-sm text-sidebar-foreground"
+            >
+                <span>Ver mas</span>
+            </Link>
+            </div>
+        </section>
     </section>
 </template>
