@@ -83,10 +83,7 @@ function submit(form, route) {
         <span>Vista previa:</span>
         <section class="border p-4 rounded-lg shadow-md flex justify-between mb-4" :class="getStateClasses(stateForm.color)">
             <div class="space-y-2">
-                <h2 class="text-2xl font-semibold">Nombre del expediente</h2>
-                <div class="max-w-2xl text-sm ">
-                    <span>Numero del expediente</span>
-                </div>
+                <h2 class="text-2xl font-semibold">Av. Falsa 123</h2>
             </div>
             <div>
                 <Link

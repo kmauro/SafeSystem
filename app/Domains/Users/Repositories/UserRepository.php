@@ -3,7 +3,7 @@
 namespace App\Domains\Users\Repositories;
 
 use App\Domains\Users\Models\User;
-use App\Domains\Roles\Role;
+use App\Domains\Users\Models\Role;
 use Illuminate\Database\Eloquent\Collection;
 
 class UserRepository

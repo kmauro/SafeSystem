@@ -10,6 +10,7 @@ import {
   User,
   ListIcon,
   Table2,
+  BotMessageSquare
 } from 'lucide-vue-next'
 import { Link, usePage } from '@inertiajs/vue3'
 import ApplicationLogo from '@/Components/ui/application-logo/ApplicationLogo.vue'
@@ -65,6 +66,12 @@ const menus = [
   },
 ]
 
+const wppMenu = {
+    label: 'WhatsApp Bot',
+    icon: BotMessageSquare,
+    href: '/whatsapp',
+}
+
 const user = computed(() => page.props.auth?.user ?? { name: 'Usuario', email: '' , surname: '', username: '', phone: '' })
 const userInitials = computed(() => {
   return user.value.name?.charAt(0).toUpperCase() +  user.value.surname?.charAt(0).toUpperCase() || 'U'
@@ -80,7 +87,7 @@ const userInitials = computed(() => {
     <div class="flex-1 overflow-y-auto p-6 border-r border-sidebar-border">
       <div class="space-y-4">
         <template v-for="menu in menus" :key="menu.id">
-          <Collapsible :default-open="true">
+          <Collapsible :default-open="false">
             <template #default="{ open }">
               <CollapsibleTrigger class="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm font-semibold text-sidebar-foreground"
               :class="{
@@ -113,6 +120,21 @@ const userInitials = computed(() => {
             </template>
           </Collapsible>
         </template>
+        <Link
+            view-transition
+            replace
+            :href="wppMenu.href || '#'"
+            :class="{
+            'bg-primary text-primary-foreground font-semibold': $page.url.startsWith(wppMenu.href),
+            'hover:bg-primary/10': !$page.url.startsWith(wppMenu.href),
+            }"
+            class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-sidebar-foreground"
+        >
+            <component :is="wppMenu.icon" class="h-4 w-4" />
+            <span>
+                {{ wppMenu.label }}
+            </span>
+        </Link>
       </div>
     </div>
 

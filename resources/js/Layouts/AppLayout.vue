@@ -1,9 +1,21 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, onBeforeUnmount } from 'vue'
 import Sidebar from '@/Components/ui/Sidebar/Sidebar.vue'
 import PageTitle from '@/Components/ui/page-title/PageTitle.vue'
 
 const sidebarOpen = ref(true)
+
+const handleSidebarSet = (e) => {
+    const detail = e?.detail
+
+    if (detail && Object.prototype.hasOwnProperty.call(detail, 'open')) {
+        sidebarOpen.value = !!detail.open
+    }
+}
+
+if (typeof window !== 'undefined') {
+    window.addEventListener('sidebar:set', handleSidebarSet)
+}
 
 defineProps({
     title: String,
@@ -14,7 +26,13 @@ const toggleSidebar = () => {
 }
 
 onMounted(() => {
-  sidebarOpen.value = window.innerWidth >= 1024
+    sidebarOpen.value = window.innerWidth >= 1024
+})
+
+onBeforeUnmount(() => {
+    if (typeof window !== 'undefined') {
+        window.removeEventListener('sidebar:set', handleSidebarSet)
+    }
 })
 </script>
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Domains\API\Controllers\APIController;
 use App\Domains\Users\Controllers\UserController;
 use App\Domains\Clients\Controllers\ClientController;
 use App\Domains\Clients\Controllers\InstallationController;
@@ -51,6 +52,10 @@ Route::middleware('auth')->controller(Configcontroller::class)->group(function (
     Route::get('/settings', 'showSettings')->name('user.settings');
     Route::post('/config/addCategory', 'addCategory')->name('add.category');
     Route::post('/config/addState', 'addState')->name('add.state');
+});
+
+Route::middleware('auth')->controller(APIController::class)->group(function () {
+    Route::get('/whatsapp', 'show')->name('show.whatsapp');
 });
 
 Route::post('/logout', [UserController::class, 'logout'])
