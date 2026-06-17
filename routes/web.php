@@ -56,6 +56,10 @@ Route::middleware('auth')->controller(Configcontroller::class)->group(function (
 
 Route::middleware('auth')->controller(APIController::class)->group(function () {
     Route::get('/whatsapp', 'show')->name('show.whatsapp');
+    Route::get('/api/conversations', [APIController::class, 'conversations']);
+    Route::get('/api/conversations/{id}', [APIController::class, 'conversation']);
+    Route::patch('/api/conversations/{id}/status', [APIController::class, 'updateStatus']);
+    Route::post('/api/conversations/{id}/messages', [APIController::class, 'sendMessage']);
 });
 
 Route::post('/logout', [UserController::class, 'logout'])

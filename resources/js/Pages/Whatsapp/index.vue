@@ -38,7 +38,6 @@ const search = ref('')
 const statusFilter = ref('')
 const statusValue = ref('BOT')
 const reply = ref('')
-const adminKey = ref('')
 const errorMessage = ref('')
 const loadingConversations = ref(false)
 const loadingConversation = ref(false)
@@ -49,7 +48,6 @@ const messagesContainer = ref(null)
 let searchTimer = null
 let refreshTimer = null
 
-const adminKeyStorageKey = 'botiAdminKey'
 
 const messages = computed(() => selectedConversation.value?.messages ?? [])
 
@@ -84,7 +82,6 @@ watch(statusFilter, () => {
 })
 
 onMounted(() => {
-    adminKey.value = window.localStorage.getItem(adminKeyStorageKey) ?? ''
     selectedId.value = new URLSearchParams(window.location.search).get('conversation') ?? ''
 
     loadConversations().catch(setError)
@@ -114,32 +111,19 @@ function requestHeaders() {
         headers['X-CSRF-TOKEN'] = csrfToken
     }
 
-    if (adminKey.value) {
-        headers['x-admin-key'] = adminKey.value
-    }
-
     return headers
 }
 
 async function api(path, options = {}) {
     const response = await window.fetch(path, {
         ...options,
+        // Ensure cookies (session) are sent so Laravel can validate CSRF token
+        credentials: 'same-origin',
         headers: {
             ...requestHeaders(),
             ...(options.headers ?? {}),
         },
     })
-
-    if (response.status === 401) {
-        const key = window.prompt('Admin key')
-
-        if (key) {
-            adminKey.value = key
-            window.localStorage.setItem(adminKeyStorageKey, key)
-
-            return api(path, options)
-        }
-    }
 
     const responseText = await response.text()
 

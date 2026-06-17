@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'whatsapp_bot' => [
+        'url' => env('WHATSAPP_BOT_URL'),
+        'admin_key' => env('WHATSAPP_BOT_ADMIN_KEY'),
+    ],
+
 ];
