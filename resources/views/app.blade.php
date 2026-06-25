@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- Add inside <head> -->
-        <title inertia>{{ config('app.name', 'Laravel') }}</title>
-<script src="https://tweakcn.com/live-preview.min.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title inertia>{{ config('app.name', 'Laravel') }}</title>
+    <script src="https://tweakcn.com/live-preview.min.js"></script>
     @vite('resources/js/app.js')
     @inertiaHead
 </head>

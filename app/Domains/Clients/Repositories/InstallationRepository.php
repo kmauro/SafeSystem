@@ -3,9 +3,10 @@
 namespace App\Domains\Clients\Repositories;
 
 use App\Domains\Clients\Models\Installation;
-use Illuminate\Support\Facades\DB;
+use App\Domains\Configs\Models\State;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class InstallationRepository
 {
@@ -21,7 +22,8 @@ class InstallationRepository
 
     public function getInstallationsByClient(int $id): Collection
     {
-        $installations =  DB::table('installations')->where('client_id', $id)->get();
+        $installations = DB::table('installations')->where('client_id', $id)->get();
+
         return $installations;
     }
 
@@ -34,6 +36,15 @@ class InstallationRepository
             ->orderBy('updated_at', 'desc');
     }
 
+    public function getStateStatistics(): Collection
+    {
+        return State::query()
+            ->select(['id', 'name', 'color'])
+            ->withCount('installations')
+            ->orderBy('name')
+            ->get();
+    }
+
     public function addWhere(Builder $query, string $field, string $operator, string $search): Builder
     {
         return $query->where($field, $operator, "%{$search}%");
@@ -43,6 +54,7 @@ class InstallationRepository
     {
         $installation = Installation::find($data['id']);
         $installation->update($data);
+
         return $installation->id;
     }
 

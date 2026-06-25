@@ -4,7 +4,7 @@ import { Link, router } from '@inertiajs/vue3';
 import { getStateActive, getStateClasses } from '@/Constants/ui';
 import { Input } from '@/Components/ui/input';
 import NotificationToast from '@/Components/ui/notification-toast/NotificationToast.vue';
-import { watch, reactive, ref } from 'vue';
+import { watch, reactive } from 'vue';
 import { useDebounceFn } from '@vueuse/core';
 
 defineOptions({
@@ -17,9 +17,15 @@ const props = defineProps({
     states: Object
 })
 
+const normalizeStateId = (state) => {
+    const stateId = state?.id ?? state
+
+    return stateId ? Number(stateId) : null
+}
+
 const filters = reactive({
     search: props.filters.search ?? '',
-    state: props.filters.state ?? null,
+    state: normalizeStateId(props.filters.state),
 })
 
 const reload = useDebounceFn(() => {
@@ -37,7 +43,9 @@ const reload = useDebounceFn(() => {
 watch(filters, reload, { deep: true })
 
 const selectState = (state) => {
-    filters.state = filters.state === state ? null : state
+    const stateId = normalizeStateId(state)
+
+    filters.state = filters.state === stateId ? null : stateId
 }
 
 </script>
@@ -53,7 +61,7 @@ const selectState = (state) => {
             :key="state.id"
             class=" text-xs pl-3 pt-1 pb-1 pr-3 rounded-xl border-1 inset-shadow-sm/18"
             :class="
-                filters.state === state ? getStateActive(state.color) : getStateClasses(state.color)"
+                filters.state === state.id ? getStateActive(state.color) : getStateClasses(state.color)"
             >
                 {{ state.name }}
             </button>
