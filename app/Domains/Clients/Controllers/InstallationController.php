@@ -2,10 +2,12 @@
 
 namespace App\Domains\Clients\Controllers;
 
+use App\Domains\Clients\Requests\NewInstallationDeviceRequest;
 use App\Domains\Clients\Requests\NewInstallationRequest;
 use App\Domains\Clients\Services\ClientService;
 use App\Domains\Clients\Services\InstallationService;
 use App\Domains\Configs\Services\ConfigService;
+use App\Domains\CRUD\Services\DeviceService;
 use App\Domains\Users\Services\UserService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
@@ -20,6 +22,7 @@ class InstallationController extends Controller
         protected ClientService $clientService,
         protected InstallationService $installationService,
         protected UserService $userService,
+        protected DeviceService $deviceService,
     ) {}
 
     public function showDashboard(): InertiaResponse
@@ -69,6 +72,7 @@ class InstallationController extends Controller
         $categories = $this->configService->getCategories();
         $states = $this->configService->getStates();
         $users = $this->userService->getAllUsers();
+        $devices = $this->deviceService->getAllDevices();
 
         return Inertia::render('CRM/Installations/ViewInstallation', [
             'title' => 'Instalacion',
@@ -77,6 +81,7 @@ class InstallationController extends Controller
             'categories' => $categories,
             'states' => $states,
             'users' => $users,
+            'devices' => $devices,
         ]);
     }
 
@@ -100,6 +105,22 @@ class InstallationController extends Controller
         } else {
             return back()->with('error', 'hubo un problema, intentelo de nuevo.');
         }
+    }
+
+    public function addInstallationDevice(NewInstallationDeviceRequest $request, int $id): RedirectResponse
+    {
+        $this->installationService->addInstallationDevice($id, $request->validatedInstallationDeviceData());
+
+        return back()->with('success', 'El dispositivo se agrego correctamente a la instalacion.');
+    }
+
+    public function deleteInstallationDevice(int $installationId, int $installationDeviceId): RedirectResponse
+    {
+        if ($this->installationService->deleteInstallationDevice($installationId, $installationDeviceId)) {
+            return back()->with('success', 'Dispositivo quitado correctamente.');
+        }
+
+        return back()->with('error', 'No se pudo quitar el dispositivo. Intentelo de nuevo.');
     }
 
     public function deleteInstallation(int $id): RedirectResponse

@@ -70,6 +70,16 @@ class InstallationService
         return $this->installationRepository->updateInstallation($data);
     }
 
+    public function addInstallationDevice(int $installationId, array $data): void
+    {
+        $this->installationRepository->addInstallationDevice($installationId, $data);
+    }
+
+    public function deleteInstallationDevice(int $installationId, int $installationDeviceId): bool
+    {
+        return $this->installationRepository->deleteInstallationDevice($installationId, $installationDeviceId);
+    }
+
     public function deleteInstallation(int $id): bool
     {
         return $this->installationRepository->deleteInstallation($id);

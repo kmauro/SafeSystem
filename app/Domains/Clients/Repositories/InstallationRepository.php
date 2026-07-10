@@ -17,7 +17,9 @@ class InstallationRepository
 
     public function getInstallationById(int $id): Installation
     {
-        return Installation::find($id);
+        return Installation::query()
+            ->with(['devices.type:id,type'])
+            ->findOrFail($id);
     }
 
     public function getInstallationsByClient(int $id): Collection
@@ -56,6 +58,23 @@ class InstallationRepository
         $installation->update($data);
 
         return $installation->id;
+    }
+
+    public function addInstallationDevice(int $installationId, array $data): void
+    {
+        $installation = Installation::findOrFail($installationId);
+
+        $installation->devices()->attach($data['device_id'], [
+            'code' => $data['code'],
+        ]);
+    }
+
+    public function deleteInstallationDevice(int $installationId, int $installationDeviceId): bool
+    {
+        return DB::table('installation_devices')
+            ->where('id', $installationDeviceId)
+            ->where('installation_id', $installationId)
+            ->delete() > 0;
     }
 
     public function deleteInstallation(int $id): bool

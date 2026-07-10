@@ -1,10 +1,11 @@
 <?php
 
 use App\Domains\API\Controllers\APIController;
-use App\Domains\Users\Controllers\UserController;
 use App\Domains\Clients\Controllers\ClientController;
 use App\Domains\Clients\Controllers\InstallationController;
 use App\Domains\Configs\Controllers\Configcontroller;
+use App\Domains\CRUD\Controllers\DeviceController;
+use App\Domains\Users\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -25,7 +26,6 @@ Route::middleware('auth')->controller(UserController::class)->group(function () 
     Route::post('/profile/updatePassword', 'updatePassword')->name('profile.updatePassword');
 });
 
-
 Route::middleware('auth')->controller(ClientController::class)->group(function () {
     Route::get('/client/dashboard', 'showDashboard')->name('client.dashboard');
     Route::get('/client/add', 'showAddClient')->name('client.add');
@@ -45,13 +45,27 @@ Route::middleware('auth')->controller(InstallationController::class)->group(func
 
     Route::post('/installation/add', 'addInstallation')->name('installation.store');
     Route::post('/installation/update', 'updateInstallation')->name('installation.update');
+    Route::post('/installation/{id}/devices', 'addInstallationDevice')->whereNumber('id')->name('installation.devices.store');
+    Route::post('/installation/{installationId}/devices/{installationDeviceId}/delete', 'deleteInstallationDevice')->whereNumber(['installationId', 'installationDeviceId'])->name('installation.devices.delete');
     Route::post('/installation/{id}/delete', 'deleteInstallation')->name('installation.delete');
+});
+
+Route::middleware('auth')->controller(DeviceController::class)->group(function () {
+    Route::get('/crud/lista', 'showIndex')->name('devices.index');
+    Route::get('/crud/agregar', 'showAddDevice')->name('devices.add');
+    Route::get('/crud/{id}', 'showDevice')->whereNumber('id')->name('devices.show');
+
+    Route::post('/crud/agregar', 'addDevice')->name('devices.store');
+    Route::post('/crud/update', 'updateDevice')->name('devices.update');
+    Route::post('/crud/{id}/delete', 'deleteDevice')->whereNumber('id')->name('devices.delete');
 });
 
 Route::middleware('auth')->controller(Configcontroller::class)->group(function () {
     Route::get('/settings', 'showSettings')->name('user.settings');
     Route::post('/config/addCategory', 'addCategory')->name('add.category');
     Route::post('/config/addState', 'addState')->name('add.state');
+    Route::post('/config/addDeviceType', 'addDeviceType')->name('add.type');
+    Route::post('/config/addFeature', 'addFeature')->name('add.feature');
 });
 
 Route::middleware('auth')->controller(APIController::class)->group(function () {

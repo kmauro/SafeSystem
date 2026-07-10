@@ -4,8 +4,10 @@ namespace App\Domains\Clients\Models;
 
 use App\Domains\Configs\Models\Category;
 use App\Domains\Configs\Models\State;
+use App\Domains\CRUD\Models\Device;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\belongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Installation extends Model
 {
@@ -21,18 +23,24 @@ class Installation extends Model
 
     public $timestamps = true;
 
-    public function clients(): belongsTo
+    public function clients(): BelongsTo
     {
         return $this->belongsTo(Client::class);
     }
 
-    public function categories(): belongsTo
+    public function categories(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
 
-    public function states(): belongsTo
+    public function states(): BelongsTo
     {
         return $this->belongsTo(State::class);
+    }
+
+    public function devices(): BelongsToMany
+    {
+        return $this->belongsToMany(Device::class, 'installation_devices')
+            ->withPivot(['id', 'code']);
     }
 }

@@ -22,6 +22,7 @@ const props = defineProps({
     categories: Object,
     states: Object,
     users: Object,
+    devices: Object,
 })
 
 const form = useForm({
@@ -34,6 +35,13 @@ const form = useForm({
     state_id: props.installation.state_id,
     assigned_user_id: props.installation.assigned_user_id,
 })
+
+const installationDeviceForm = useForm({
+    device_id: '',
+    code: '',
+})
+
+const removeInstallationDeviceForm = useForm({})
 
 function submit() {
     form.post('/installation/update', {
@@ -49,6 +57,21 @@ function deleteClient(installationId) {
         onSuccess: () => {
             form.reset();
         },
+    });
+}
+
+function addInstallationDevice() {
+    installationDeviceForm.post(`/installation/${props.installation.id}/devices`, {
+        preserveScroll: true,
+        onSuccess: () => {
+            installationDeviceForm.reset();
+        },
+    });
+}
+
+function deleteInstallationDevice(installationDeviceId) {
+    removeInstallationDeviceForm.post(`/installation/${props.installation.id}/devices/${installationDeviceId}/delete`, {
+        preserveScroll: true,
     });
 }
 
@@ -205,5 +228,71 @@ function deleteClient(installationId) {
             <Button  :disabled="form.processing" type="submit" v-if="isEditing">Editar instalación</Button>
 
         </form>
+    </section>
+
+    <section class="mt-4 border p-4 rounded-lg shadow-md bg-background">
+        <div class="mb-4">
+            <h2 class="text-2xl font-semibold">Dispositivos</h2>
+        </div>
+
+        <form @submit.prevent="addInstallationDevice" class="mb-6 grid gap-4 lg:grid-cols-[1fr_1fr_auto] lg:items-end">
+            <div>
+                <Label for="installation_device" class="block mb-1">Dispositivo</Label>
+                <Select id="installation_device" v-model="installationDeviceForm.device_id">
+                    <SelectTrigger class="w-full">
+                        <SelectValue placeholder="Selecciona un dispositivo" />
+                    </SelectTrigger>
+                    <SelectContent>
+                        <SelectItem v-for="device in props.devices" :key="device.id" :value="device.id">
+                            {{ device.name }} <span v-if="device.type">- {{ device.type.type }}</span>
+                        </SelectItem>
+                    </SelectContent>
+                </Select>
+                <p v-if="installationDeviceForm.errors.device_id" class="text-sm text-destructive">
+                    {{ installationDeviceForm.errors.device_id }}
+                </p>
+            </div>
+
+            <div>
+                <Label for="installation_device_code" class="block mb-1">Codigo</Label>
+                <Input
+                    id="installation_device_code"
+                    v-model="installationDeviceForm.code"
+                    type="text"
+                    :aria-invalid="Boolean(installationDeviceForm.errors.code)"
+                />
+                <p v-if="installationDeviceForm.errors.code" class="text-sm text-destructive">
+                    {{ installationDeviceForm.errors.code }}
+                </p>
+            </div>
+
+            <Button :disabled="installationDeviceForm.processing" type="submit">
+                Agregar dispositivo
+            </Button>
+        </form>
+
+        <div v-if="installation.devices.length === 0" class="flex items-center justify-center">
+            <p class="text-muted-foreground">No hay dispositivos agregados a esta instalacion.</p>
+        </div>
+
+        <section
+            v-for="device in installation.devices"
+            :key="device.pivot.id"
+            class="border p-4 rounded-lg shadow-md flex flex-col justify-between gap-4 mb-4 md:flex-row md:items-center"
+        >
+            <div class="space-y-1">
+                <h3 class="text-xl font-semibold">{{ device.name }}</h3>
+                <p class="text-sm text-muted-foreground">{{ device.type?.type }}</p>
+                <p class="text-sm">Codigo: {{ device.pivot.code }}</p>
+            </div>
+
+            <Alert
+                :label="'Quitar dispositivo'"
+                :variant="'destructive'"
+                :title="'Quitar dispositivo?'"
+                :description="'Esta accion quitara el dispositivo de la instalacion.'"
+                @accept="deleteInstallationDevice(device.pivot.id)"
+            />
+        </section>
     </section>
 </template>

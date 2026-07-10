@@ -19,9 +19,19 @@ const stateForm = useForm({
     color: 'default',
 })
 
+const typeForm = useForm({
+    type: null,
+})
+
+const featureForm = useForm({
+    feature: null,
+})
+
 function submit(form, route) {
     form.post(route, {
         onSuccess: () => {
+            form.feature = null;
+            form.type = null;
             form.name = null;
             form.color = null;
         },
@@ -36,6 +46,37 @@ function submit(form, route) {
         <h1 class="text-2xl font-bold mb-4">Configuración</h1>
         <p>Aquí puedes configurar tus preferencias y ajustes de la cuenta.</p>
     </div>
+
+    <form @submit.prevent="submit(featureForm, '/config/addFeature')" class="border p-4 bg-card space-y-2 rounded-lg shadow-md bg-background mt-4">
+        <h2 class="text-lg font-semibold mb-2">Caracteristicas</h2>
+        <Label for="feature">Nombre de la caracteristica:</Label>
+        <Input
+        id="feature"
+         placeholder="Caracteristica"
+         v-model="featureForm.feature"
+         :aria-invalid="Boolean(featureForm.errors.feature)"
+          />
+        <p v-if="featureForm.errors.feature" class="text-sm text-destructive">
+            {{ featureForm.errors.feature }}
+        </p>
+        <Button type="submit" class="mt-2">Agregar</Button>
+    </form>
+
+    <form @submit.prevent="submit(typeForm, '/config/addDeviceType')" class="border p-4 bg-card space-y-2 rounded-lg shadow-md bg-background mt-4">
+        <h2 class="text-lg font-semibold mb-2">Tipo de dispositivo</h2>
+        <Label for="type">Tipo:</Label>
+        <Input
+        id="type"
+         placeholder="Tipo"
+         v-model="typeForm.type"
+         :aria-invalid="Boolean(typeForm.errors.type)"
+          />
+        <p v-if="typeForm.errors.type" class="text-sm text-destructive">
+            {{ typeForm.errors.type }}
+        </p>
+        <Button type="submit" class="mt-2">Agregar</Button>
+    </form>
+
     <form @submit.prevent="submit(categoryForm, '/config/addCategory')" class="border p-4 bg-card space-y-2 rounded-lg shadow-md bg-background mt-4">
         <h2 class="text-lg font-semibold mb-2">Categorias</h2>
         <Label for="category">Nombre de la categoria:</Label>

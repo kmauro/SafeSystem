@@ -5,14 +5,15 @@ namespace App\Domains\Configs\Services;
 use App\Domains\Configs\Models\Category;
 use App\Domains\Configs\Models\State;
 use App\Domains\Configs\Repositories\ConfigRepository;
+use App\Domains\CRUD\Models\DeviceType;
+use App\Domains\CRUD\Models\Feature;
 use Illuminate\Support\Collection;
 
 class ConfigService
 {
-
     public function __construct(
         protected ConfigRepository $configRepository,
-    ){}
+    ) {}
 
     public function createCategory(array $data): Category
     {
@@ -22,6 +23,16 @@ class ConfigService
     public function createState(array $data): State
     {
         return $this->configRepository->createState($data);
+    }
+
+    public function createDeviceType(array $data): DeviceType
+    {
+        return $this->configRepository->createDeviceType($data);
+    }
+
+    public function createFeature(array $data): Feature
+    {
+        return $this->configRepository->createFeature($data);
     }
 
     public function getCategories(): Collection
