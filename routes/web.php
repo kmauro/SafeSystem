@@ -3,7 +3,7 @@
 use App\Domains\API\Controllers\APIController;
 use App\Domains\Clients\Controllers\ClientController;
 use App\Domains\Clients\Controllers\InstallationController;
-use App\Domains\Configs\Controllers\Configcontroller;
+use App\Domains\Configs\Controllers\ConfigController;
 use App\Domains\CRUD\Controllers\DeviceController;
 use App\Domains\Users\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -60,7 +60,7 @@ Route::middleware('auth')->controller(DeviceController::class)->group(function (
     Route::post('/crud/{id}/delete', 'deleteDevice')->whereNumber('id')->name('devices.delete');
 });
 
-Route::middleware('auth')->controller(Configcontroller::class)->group(function () {
+Route::middleware('auth')->controller(ConfigController::class)->group(function () {
     Route::get('/settings', 'showSettings')->name('user.settings');
     Route::post('/config/addCategory', 'addCategory')->name('add.category');
     Route::post('/config/addState', 'addState')->name('add.state');

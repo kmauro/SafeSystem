@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response as InertiaResponse;
 
-class Configcontroller extends Controller
+class ConfigController extends Controller
 {
     public function __construct(
         protected ConfigService $configService,
